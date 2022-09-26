@@ -1,5 +1,6 @@
 import Image from "next/image";
-import React from "react";
+import React, { ReactNode } from "react";
+import Layout from "../../components/Layout";
 import imageLoader from "../../imageLoader";
 import { Character, GetCharacterResults } from "../../types";
 
@@ -44,3 +45,7 @@ export const getStaticProps = async ({ params }: { params: { id: string } }) => 
 };
 
 export default CharacterPage;
+
+CharacterPage.getLayout = function getLayout(page: ReactNode) {
+  return <Layout>{page}</Layout>;
+};
