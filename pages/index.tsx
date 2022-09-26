@@ -1,6 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import imageLoader from "../imageLoader";
 
 import styles from "../styles/Home.module.css";
@@ -16,7 +17,11 @@ const Home: NextPage<{ characters: Character[] }> = ({ characters }) => {
       </Head>
       {characters.map((character) => (
         <div key={character.id}>
-          {character.name}
+          <Link href={`/characters/${character.id}`}>
+            <a>
+              <h3>{character.name}</h3>
+            </a>
+          </Link>
           <Image
             // For next export
             loader={imageLoader}
