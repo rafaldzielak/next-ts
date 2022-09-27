@@ -1,10 +1,14 @@
+import { GetServerSideProps } from "next";
 import Image from "next/image";
-import React, { ReactNode } from "react";
-import Layout from "../../components/Layout";
+import { useRouter } from "next/router";
+import React from "react";
 import imageLoader from "../../imageLoader";
-import { Character, GetCharacterResults } from "../../types";
+import { Character } from "../../types";
 
 const CharacterPage = ({ character }: { character: Character }) => {
+  const router = useRouter();
+  console.log(router.query.id);
+
   return (
     <div>
       <h1>{character.name}</h1>
@@ -20,22 +24,11 @@ const CharacterPage = ({ character }: { character: Character }) => {
   );
 };
 
-// This will run on build, will run through all the characters and it's going to create params with that id
-export const getStaticPaths = async () => {
-  const res = await fetch("https://rickandmortyapi.com/api/character");
-  const { results: characters }: GetCharacterResults = await res.json();
-
-  return {
-    paths: characters.map((character) => {
-      return { params: { id: String(character.id) } };
-    }),
-    fallback: false,
-  };
-};
-
-export const getStaticProps = async ({ params }: { params: { id: string } }) => {
-  const res = await fetch(`https://rickandmortyapi.com/api/character/${params.id}`);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const res = await fetch(`https://rickandmortyapi.com/api/character/${context.query.id}`);
   const character = await res.json();
+  // Will be visible in node console
+  console.log(character);
 
   return {
     props: {
@@ -45,7 +38,3 @@ export const getStaticProps = async ({ params }: { params: { id: string } }) => 
 };
 
 export default CharacterPage;
-
-CharacterPage.getLayout = function getLayout(page: ReactNode) {
-  return <Layout>{page}</Layout>;
-};
